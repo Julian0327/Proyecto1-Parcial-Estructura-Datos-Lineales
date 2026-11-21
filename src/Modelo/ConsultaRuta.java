@@ -25,7 +25,8 @@ public class ConsultaRuta {
 
     @Override
     public String toString() {
-        return "Origen: " + origen.getNombre() + " -> Destino: " + destino.getNombre() + " | Minutos: " + minutos;
+        return "Origen: " + origen.getNombre() + " -> Destino: " + destino.getNombre()
+                + " | Minutos: " + minutos;
     }
 
 }
