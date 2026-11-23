@@ -1,6 +1,6 @@
-package Modelo;
+package modelo;
 
-import EstructurasLineales.ListaEnlazada;
+import estructuras.lineales.ListaEnlazada;
 
 /**
  * Línea del metro: un código, un nombre y sus estaciones en orden de recorrido.

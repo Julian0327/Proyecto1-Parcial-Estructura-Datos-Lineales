@@ -1,4 +1,4 @@
-package Modelo;
+package modelo;
 
 /** Estación del metro. Dos estaciones son iguales si tienen el mismo id. */
 public class Estacion {

@@ -1,4 +1,4 @@
-package Modelo;
+package modelo;
 
 /** Pasajero del metro: sabe dónde está y cuántos viajes ha hecho. */
 public class Pasajero extends Persona {
