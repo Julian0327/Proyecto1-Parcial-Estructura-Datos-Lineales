@@ -1,8 +1,8 @@
 package algoritmos;
 
 import estructuras.grafo.Grafo;
-import modelo.Estacion;
-import modelo.ResultadoRuta;
+import Modelo.Estacion;
+import Modelo.ResultadoRuta;
 
 /**
  * Contrato de cualquier algoritmo de ruta (principio abierto/cerrado e

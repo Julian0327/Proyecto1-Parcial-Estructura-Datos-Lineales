@@ -1,4 +1,4 @@
-package modelo;
+package Modelo;
 
 /**
  * Ordena estaciones por nombre con Merge Sort recursivo.

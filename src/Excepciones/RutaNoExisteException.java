@@ -1,4 +1,4 @@
-package excepciones;
+package Excepciones;
 
 /** Se lanza cuando no existe ningún camino entre dos estaciones de la red. */
 public class RutaNoExisteException extends ExcepcionMetro {

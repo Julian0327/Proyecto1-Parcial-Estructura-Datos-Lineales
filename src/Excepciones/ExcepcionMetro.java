@@ -1,4 +1,4 @@
-package excepciones;
+package Excepciones;
 
 /**
  * Clase base de todas las excepciones del sistema de metro.

@@ -1,6 +1,6 @@
 package estructuras.grafo;
 
-import excepciones.ColaVaciaException;
+import Excepciones.ColaVaciaException;
 
 /**
  * Cola de prioridad mínima (min-heap binario) implementada desde cero con

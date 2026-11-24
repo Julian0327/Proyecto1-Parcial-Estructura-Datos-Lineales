@@ -1,4 +1,4 @@
-package modelo;
+package Modelo;
 
 /** Clase abstracta que representa a cualquier persona del sistema. */
 public abstract class Persona {

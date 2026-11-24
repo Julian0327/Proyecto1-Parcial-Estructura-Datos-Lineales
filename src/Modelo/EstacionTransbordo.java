@@ -1,4 +1,4 @@
-package modelo;
+package Modelo;
 
 /** Estación que permite cambiar de una línea a otra. */
 public class EstacionTransbordo extends Estacion {

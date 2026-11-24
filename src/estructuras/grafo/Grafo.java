@@ -1,8 +1,8 @@
 package estructuras.grafo;
 
 import estructuras.lineales.ListaEnlazada;
-import excepciones.EstacionNoExisteException;
-import modelo.Estacion;
+import Excepciones.EstacionNoExisteException;
+import Modelo.Estacion;
 
 /**
  * Grafo no dirigido y ponderado de la red del metro, con lista de adyacencia.

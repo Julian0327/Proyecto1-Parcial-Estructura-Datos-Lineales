@@ -2,9 +2,9 @@ package algoritmos;
 
 import estructuras.grafo.Grafo;
 import estructuras.lineales.ListaEnlazada;
-import excepciones.RutaNoExisteException;
-import modelo.Estacion;
-import modelo.ResultadoRuta;
+import Excepciones.RutaNoExisteException;
+import Modelo.Estacion;
+import Modelo.ResultadoRuta;
 
 /**
  * Esqueleto común de los algoritmos de ruta (patrón Template Method).
