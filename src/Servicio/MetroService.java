@@ -1,7 +1,12 @@
 package Servicio;
 
 import algoritmos.AlgoritmoRuta;
+import estructuras.grafo.Arista;
 import estructuras.grafo.Grafo;
+import EstructurasArbol.ArbolBinario;
+import EstructurasArbol.IArbol;
+import EstructurasHash.IMapa;
+import EstructurasHash.TablaHash;
 import EstructurasLineales.Cola;
 import EstructurasLineales.ICola;
 import EstructurasLineales.IPila;
@@ -23,21 +28,16 @@ import Modelo.ResultadoRuta;
  * <p>
  * Depende de la interfaz {@link AlgoritmoRuta} (inyección de dependencias):
  * se puede cambiar de BFS a Dijkstra con {@link #setAlgoritmo} sin tocar nada
- * más. Une las estructuras del proyecto: grafo (red), lista enlazada
- * (líneas y pasajeros registrados), cola (andén) y pila (historial).
- *
- * <p>
- * Integración con P3: los pasajeros y las líneas se guardan hoy en
- * {@link ListaEnlazada} (búsqueda O(n)). Cuando estén listas la tabla hash
- * (id de pasajero) y el árbol binario (código de línea), solo hay que cambiar
- * los campos {@code pasajeros} y {@code lineas} y los métodos de búsqueda.
+ * más. Une todas las estructuras del proyecto: grafo (red), árbol binario de
+ * búsqueda (líneas por código), tabla hash (pasajeros por id), cola (andén) y
+ * pila (historial).
  */
 public class MetroService {
 
     private AlgoritmoRuta algoritmo;
     private Grafo grafo = new Grafo();
-    private ListaEnlazada<LineaMetro> lineas = new ListaEnlazada<>();
-    private ListaEnlazada<Pasajero> pasajeros = new ListaEnlazada<>();
+    private IArbol<String, LineaMetro> lineas = new ArbolBinario<>();
+    private IMapa<String, Pasajero> pasajeros = new TablaHash<>();
     private ICola<Pasajero> anden = new Cola<>();
     private IPila<ConsultaRuta> historial = new Pila<>();
 
@@ -71,10 +71,14 @@ public class MetroService {
         if (linea == null) {
             throw new IllegalArgumentException("La línea no puede ser nula.");
         }
-        if (buscarLinea(linea.getCodigoLinea()) != null) {
+        String clave = normalizarCodigo(linea.getCodigoLinea());
+        if (clave.isEmpty()) {
+            throw new IllegalArgumentException("El código de la línea no puede estar vacío.");
+        }
+        if (lineas.contiene(clave)) {
             throw new ExcepcionMetro("Ya existe una línea con el código '" + linea.getCodigoLinea() + "'.");
         }
-        lineas.agregar(linea);
+        lineas.insertar(clave, linea);
         for (Estacion estacion : linea.getEstaciones()) {
             grafo.agregarEstacion(estacion);
         }
@@ -89,23 +93,25 @@ public class MetroService {
         grafo.conectar(a, b, minutos);
     }
 
-    /** Devuelve la línea con ese código o null si no existe. O(n). */
+    /** Devuelve la línea con ese código o null si no existe. O(log n) promedio. */
     public LineaMetro buscarLinea(String codigo) {
-        for (LineaMetro linea : lineas) {
-            if (linea.getCodigoLinea().equalsIgnoreCase(codigo)) {
-                return linea;
-            }
+        if (codigo == null) {
+            return null;
         }
-        return null;
+        return lineas.buscar(normalizarCodigo(codigo));
     }
 
-    /** Líneas registradas (solo lectura). */
+    /** Líneas registradas en orden alfabético de código (recorrido inorden). */
     public Iterable<LineaMetro> lineas() {
-        return lineas;
+        return lineas.valoresEnOrden();
     }
 
     public int cantidadLineas() {
         return lineas.tamano();
+    }
+
+    public int alturaArbolLineas() {
+        return lineas.altura();
     }
 
     public int cantidadEstaciones() {
@@ -114,6 +120,18 @@ public class MetroService {
 
     public int cantidadConexiones() {
         return grafo.cantidadConexiones();
+    }
+
+    public int indiceDe(Estacion estacion) {
+        return grafo.indiceDe(estacion);
+    }
+
+    public Estacion estacionEn(int indice) {
+        return grafo.estacionEn(indice);
+    }
+
+    public Iterable<Arista> vecinosDe(int indice) {
+        return grafo.vecinosDe(indice);
     }
 
     /** Copia de las estaciones de la red en orden de registro. */
@@ -201,30 +219,34 @@ public class MetroService {
      */
     public Pasajero registrarPasajero(String id, String nombre, String estacionActual) {
         Estacion estacion = buscarEstacion(estacionActual);
-        if (buscarPasajero(id) != null) {
+        if (pasajeros.contiene(id)) {
             throw new ExcepcionMetro("Ya existe un pasajero con el id '" + id + "'.");
         }
         Pasajero pasajero = new Pasajero(id, nombre, estacion);
-        pasajeros.agregar(pasajero);
+        pasajeros.insertar(pasajero.getId(), pasajero);
         return pasajero;
     }
 
-    /** Devuelve el pasajero con ese id o null si no existe. O(n). */
+    /** Devuelve el pasajero con ese id o null si no existe. O(1) promedio. */
     public Pasajero buscarPasajero(String id) {
-        for (Pasajero pasajero : pasajeros) {
-            if (pasajero.getId().equals(id)) {
-                return pasajero;
-            }
+        if (id == null) {
+            return null;
         }
-        return null;
+        return pasajeros.obtener(id);
     }
 
     public Iterable<Pasajero> pasajeros() {
-        return pasajeros;
+        return pasajeros.valores();
     }
 
     public int cantidadPasajeros() {
         return pasajeros.tamano();
+    }
+
+    public int cantidadColisionesPasajeros() {
+        return pasajeros instanceof TablaHash
+                ? ((TablaHash<?, ?>) pasajeros).cantidadColisiones()
+                : 0;
     }
 
     // ------------------------------------------------------------- andén
@@ -275,7 +297,7 @@ public class MetroService {
 
     /** Guarda la red (estaciones, conexiones y líneas) en un archivo .txt. */
     public void guardarRed(String ruta) {
-        PersistenciaGrafo.guardar(grafo, lineas, ruta);
+        PersistenciaGrafo.guardar(grafo, lineas(), ruta);
     }
 
     /**
@@ -288,11 +310,19 @@ public class MetroService {
         ListaEnlazada<LineaMetro> lineasNuevas = new ListaEnlazada<>();
         Grafo grafoNuevo = PersistenciaGrafo.cargar(ruta, lineasNuevas);
         reconstruirLineasFaltantes(grafoNuevo, lineasNuevas);
+        IArbol<String, LineaMetro> arbolNuevo = new ArbolBinario<>();
+        for (LineaMetro linea : lineasNuevas) {
+            arbolNuevo.insertar(normalizarCodigo(linea.getCodigoLinea()), linea);
+        }
         grafo = grafoNuevo;
-        lineas = lineasNuevas;
-        pasajeros = new ListaEnlazada<>();
+        lineas = arbolNuevo;
+        pasajeros = new TablaHash<>();
         anden = new Cola<>();
         historial = new Pila<>();
+    }
+
+    private static String normalizarCodigo(String codigo) {
+        return codigo == null ? "" : codigo.trim().toUpperCase();
     }
 
     /**

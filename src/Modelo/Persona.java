@@ -36,6 +36,22 @@ public abstract class Persona {
     }
 
     @Override
+    public boolean equals(Object otro) {
+        if (this == otro) {
+            return true;
+        }
+        if (otro == null || getClass() != otro.getClass()) {
+            return false;
+        }
+        return id.equals(((Persona) otro).id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
     public String toString() {
         return descripcion();
     }

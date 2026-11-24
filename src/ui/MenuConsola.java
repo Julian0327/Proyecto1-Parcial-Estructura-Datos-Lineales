@@ -1,6 +1,9 @@
 package ui;
 
 import algoritmos.AlgoritmoRuta;
+import EstructurasArbol.ArbolBinario;
+import EstructurasArbol.IArbol;
+import EstructurasHash.TablaHash;
 import EstructurasLineales.Cola;
 import EstructurasLineales.ICola;
 import EstructurasLineales.IPila;
@@ -69,8 +72,8 @@ public class MenuConsola {
         System.out.println(" 1. Lista enlazada de estaciones");
         System.out.println(" 2. Cola de pasajeros");
         System.out.println(" 3. Pila de consultas");
-        System.out.println(" 4. Tabla hash (pendiente: parte P3)");
-        System.out.println(" 5. Árbol de líneas (pendiente: parte P3)");
+        System.out.println(" 4. Tabla hash de pasajeros (altas, búsqueda y colisión)");
+        System.out.println(" 5. Árbol binario de líneas (insertar, buscar, inorden)");
         System.out.println(" 6. Calcular ruta más corta");
         System.out.println(" 7. Simular un turno de pasajeros");
         System.out.println(" 8. Guardar la red en archivo .txt");
@@ -211,22 +214,57 @@ public class MenuConsola {
 
     // ------------------------------------------------- opciones 4 y 5 (P3)
 
-    /**
-     * Punto de integración de P3: aquí se demuestra la tabla hash (altas, búsqueda,
-     * colisión).
-     */
+    /** Demuestra la tabla hash: altas, búsqueda, colisiones y caso borde. */
     private void opcionTablaHash() {
-        System.out.println("La tabla hash es la parte P3 y todavía no está integrada.");
-        System.out.println("Cuando exista, esta opción debe mostrar altas, búsqueda y colisión de claves.");
+        System.out.println("--- Tabla hash de pasajeros (encadenamiento) ---");
+        Estacion central = new Estacion(900, "Central", "DEMO");
+        TablaHash<String, Pasajero> tabla = new TablaHash<>(4);
+        Pasajero p1 = new Pasajero("AB", "Ana", central);
+        Pasajero p2 = new Pasajero("BA", "Luis", central);
+        Pasajero p3 = new Pasajero("P001", "Marta", central);
+        Pasajero p4 = new Pasajero("P002", "Carlos", central);
+
+        tabla.insertar(p1.getId(), p1);
+        tabla.insertar(p2.getId(), p2);
+        tabla.insertar(p3.getId(), p3);
+        tabla.insertar(p4.getId(), p4);
+
+        System.out.println("Caso real: se insertan 4 pasajeros (capacidad actual: " + tabla.capacidad() + ").");
+        System.out.println("Índice cubeta 'AB': " + tabla.indiceDe("AB")
+                + " | Índice cubeta 'BA': " + tabla.indiceDe("BA"));
+        tabla.mostrar();
+
+        System.out.println("Búsqueda 'P001': " + tabla.obtener("P001"));
+        System.out.println("Eliminar 'BA': " + tabla.eliminar("BA"));
+        System.out.println("Caso borde: buscar clave inexistente 'ZZZ' -> " + tabla.obtener("ZZZ"));
+        if (servicio.cantidadPasajeros() > 0) {
+            System.out.println("En el servicio actual: " + servicio.cantidadPasajeros()
+                    + " pasajeros, colisiones: " + servicio.cantidadColisionesPasajeros());
+        }
     }
 
     /**
-     * Punto de integración de P3: aquí se demuestra el árbol (insertar, buscar,
-     * listar en orden).
+     * Demuestra el árbol binario de búsqueda de líneas: insertar, buscar, inorden y
+     * eliminar.
      */
     private void opcionArbolLineas() {
-        System.out.println("El árbol de líneas es la parte P3 y todavía no está integrado.");
-        System.out.println("Cuando exista, esta opción debe mostrar insertar, buscar y listar en orden.");
+        System.out.println("--- Árbol binario de búsqueda de líneas ---");
+        IArbol<String, LineaMetro> arbol = new ArbolBinario<>();
+        arbol.insertar("L3", new LineaMetro("L3", "Linea Verde"));
+        arbol.insertar("L1", new LineaMetro("L1", "Linea Roja"));
+        arbol.insertar("L4", new LineaMetro("L4", "Linea Naranja"));
+        arbol.insertar("L2", new LineaMetro("L2", "Linea Azul"));
+
+        System.out.println("Caso real: se insertan L3, L1, L4, L2 (altura: " + arbol.altura() + ").");
+        System.out.println("Recorrido inorden (ordenado por código):");
+        for (LineaMetro linea : arbol.valoresEnOrden()) {
+            System.out.println("  - " + linea);
+        }
+        System.out.println("Buscar 'L2': " + arbol.buscar("L2"));
+        System.out.println("Eliminar 'L3': " + arbol.eliminar("L3") + " (tamaño: " + arbol.tamano() + ")");
+        System.out.println("Caso borde: buscar código inexistente 'L99' -> " + arbol.buscar("L99"));
+        System.out.println("En el servicio actual: " + servicio.cantidadLineas()
+                + " líneas en árbol (altura: " + servicio.alturaArbolLineas() + ").");
     }
 
     // ---------------------------------------------------------- opción 6
