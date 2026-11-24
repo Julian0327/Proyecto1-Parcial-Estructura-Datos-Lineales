@@ -11,4 +11,8 @@ public class ExcepcionMetro extends RuntimeException {
     public ExcepcionMetro(String mensaje) {
         super(mensaje);
     }
+
+    public ExcepcionMetro(String mensaje, Throwable causa) {
+        super(mensaje, causa);
+    }
 }

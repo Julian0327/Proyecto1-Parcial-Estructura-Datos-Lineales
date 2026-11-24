@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
 //* Apilar y desapilar ocurren siempre en la cima, por eso son O(1).
 //* Es Iterable (de la cima hacia la base) para mostrar el historial completo de consultas, de la más reciente a la más antigua, sin modificar la pila.
 
-public class Pila<T> implements IPila<T>, Iterable<T> {
+public class Pila<T> implements IPila<T> {
 
     private NodoPila<T> cima;
     private int tamano;
@@ -72,5 +72,18 @@ public class Pila<T> implements IPila<T>, Iterable<T> {
                 return dato;
             }
         };
+    }
+
+    /** Texto con los elementos, para mostrarlos en la demo. */
+    @Override
+    public String toString() {
+        StringBuilder texto = new StringBuilder("[");
+        for (T elemento : this) {
+            if (texto.length() > 1) {
+                texto.append(", ");
+            }
+            texto.append(elemento);
+        }
+        return texto.append("]").toString();
     }
 }

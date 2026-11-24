@@ -1,6 +1,6 @@
 package Modelo;
 
-import estructuras.lineales.ListaEnlazada;
+import EstructurasLineales.ListaEnlazada;
 
 /** Resultado de calcular una ruta: el camino y el tiempo total. */
 public class ResultadoRuta {

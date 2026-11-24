@@ -4,8 +4,7 @@ import Excepciones.ColaVaciaException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-
-public class Cola<T> implements ICola<T>, Iterable<T> {
+public class Cola<T> implements ICola<T> {
 
     private NodoCola<T> frente;
     private NodoCola<T> fin;
@@ -39,7 +38,7 @@ public class Cola<T> implements ICola<T>, Iterable<T> {
         return elemento;
     }
 
-    // Consulta el frente sin sacarlo. O(1). 
+    // Consulta el frente sin sacarlo. O(1).
     @Override
     public T verFrente() {
         if (estaVacia()) {
@@ -79,5 +78,18 @@ public class Cola<T> implements ICola<T>, Iterable<T> {
                 return dato;
             }
         };
+    }
+
+    /** Texto con los elementos, para mostrarlos en la demo. */
+    @Override
+    public String toString() {
+        StringBuilder texto = new StringBuilder("[");
+        for (T elemento : this) {
+            if (texto.length() > 1) {
+                texto.append(", ");
+            }
+            texto.append(elemento);
+        }
+        return texto.append("]").toString();
     }
 }

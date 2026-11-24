@@ -1,7 +1,21 @@
 package EstructurasHash;
 
 import EstructurasLineales.ListaEnlazada;
+import java.lang.reflect.Array;
 
+/**
+ * Tabla hash con encadenamiento: cada cubeta guarda una lista enlazada de
+ * nodos, así que dos claves que caen en la misma cubeta (colisión) conviven
+ * en la misma cadena. Implementada desde cero, sin colecciones de Java.
+ *
+ * <p>
+ * Complejidad: insertar, obtener y eliminar son O(1) promedio y O(n) en el
+ * peor caso (todas las claves en una cubeta). Cuando el factor de carga pasa
+ * de 0.75 la tabla duplica su capacidad (rehash) para mantener el O(1).
+ *
+ * @param <K> tipo de la clave (debe tener bien definidos equals y hashCode)
+ * @param <V> tipo del valor
+ */
 public class TablaHash<K, V> implements IMapa<K, V> {
 
     private static final int CAPACIDAD_INICIAL = 16;
@@ -21,16 +35,26 @@ public class TablaHash<K, V> implements IMapa<K, V> {
         this.cubetas = crearCubetas(capacidadInicial);
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    /**
+     * Java no permite crear arreglos genéricos con new; se crea con
+     * Array.newInstance y se convierte.
+     */
+    @SuppressWarnings("unchecked")
     private NodoHash<K, V>[] crearCubetas(int capacidad) {
-        return (NodoHash<K, V>[]) new NodoHash[capacidad];
+        return (NodoHash<K, V>[]) Array.newInstance(NodoHash.class, capacidad);
     }
 
+    /**
+     * Cubeta que le corresponde a la clave. Es pública para poder demostrar
+     * en la exposición que dos claves distintas caen en la misma cubeta.
+     * La máscara 0x7fffffff evita índices negativos.
+     */
     public int indiceDe(K clave) {
         validarClave(clave);
         return (clave.hashCode() & 0x7fffffff) % cubetas.length;
     }
 
+    /** Inserta o actualiza. O(1) promedio. */
     @Override
     public void insertar(K clave, V valor) {
         int indice = indiceDe(clave);
@@ -40,6 +64,7 @@ public class TablaHash<K, V> implements IMapa<K, V> {
             return;
         }
 
+        // El nodo nuevo se pone al inicio de la cadena (O(1)).
         cubetas[indice] = new NodoHash<>(clave, valor, cubetas[indice]);
         tamano++;
         if ((double) tamano / cubetas.length > FACTOR_CARGA_MAXIMO) {
@@ -47,6 +72,7 @@ public class TablaHash<K, V> implements IMapa<K, V> {
         }
     }
 
+    /** Busca por clave. O(1) promedio. Devuelve null si no existe. */
     @Override
     public V obtener(K clave) {
         NodoHash<K, V> nodo = buscarNodo(indiceDe(clave), clave);
@@ -58,6 +84,7 @@ public class TablaHash<K, V> implements IMapa<K, V> {
         return buscarNodo(indiceDe(clave), clave) != null;
     }
 
+    /** Elimina un nodo de la cadena de su cubeta. O(1) promedio. */
     @Override
     public boolean eliminar(K clave) {
         int indice = indiceDe(clave);
@@ -89,6 +116,7 @@ public class TablaHash<K, V> implements IMapa<K, V> {
         return tamano == 0;
     }
 
+    /** Recorre todas las cubetas. O(capacidad + n). */
     @Override
     public ListaEnlazada<K> claves() {
         ListaEnlazada<K> resultado = new ListaEnlazada<>();
@@ -115,6 +143,10 @@ public class TablaHash<K, V> implements IMapa<K, V> {
         return cubetas.length;
     }
 
+    /**
+     * Cuenta cuántos elementos comparten cubeta con otro (por cada cubeta,
+     * elementos - 1).
+     */
     public int cantidadColisiones() {
         int colisiones = 0;
         for (NodoHash<K, V> cabeza : cubetas) {
@@ -129,6 +161,9 @@ public class TablaHash<K, V> implements IMapa<K, V> {
         return colisiones;
     }
 
+    /**
+     * Imprime las cubetas ocupadas y sus cadenas (útil para mostrar la colisión).
+     */
     public void mostrar() {
         System.out.println("TablaHash (tamaño " + tamano + ", capacidad "
                 + cubetas.length + ", colisiones " + cantidadColisiones() + ")");
@@ -147,6 +182,7 @@ public class TablaHash<K, V> implements IMapa<K, V> {
         }
     }
 
+    /** Recorre la cadena de una cubeta buscando la clave. */
     private NodoHash<K, V> buscarNodo(int indice, K clave) {
         for (NodoHash<K, V> n = cubetas[indice]; n != null; n = n.getSiguiente()) {
             if (n.getClave().equals(clave)) {
@@ -156,6 +192,9 @@ public class TablaHash<K, V> implements IMapa<K, V> {
         return null;
     }
 
+    /**
+     * Duplica la capacidad y reubica cada nodo (rehash), sin crear nodos nuevos.
+     */
     private void redimensionar() {
         NodoHash<K, V>[] anteriores = cubetas;
         cubetas = crearCubetas(anteriores.length * 2);

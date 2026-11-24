@@ -1,14 +1,16 @@
 package EstructurasLineales;
 
-public interface ICola<T> {
+public interface ICola<T> extends Iterable<T> {
 
-    //Agrega un elemento al final de la cola.
+    // Agrega un elemento al final de la cola.
     void encolar(T elemento);
 
-    //Saca y devuelve el elemento del frente. Lanza ColaVaciaException si está vacía.
+    // Saca y devuelve el elemento del frente. Lanza ColaVaciaException si está
+    // vacía.
     T desencolar();
 
-    //Devuelve el elemento del frente sin sacarlo. Lanza ColaVaciaException si está vacía.
+    // Devuelve el elemento del frente sin sacarlo. Lanza ColaVaciaException si está
+    // vacía.
     T verFrente();
 
     boolean estaVacia();

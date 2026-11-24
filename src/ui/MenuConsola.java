@@ -7,6 +7,7 @@ import EstructurasLineales.IPila;
 import EstructurasLineales.Pila;
 import Excepciones.ColaVaciaException;
 import Excepciones.ExcepcionMetro;
+import Excepciones.PilaVaciaException;
 import java.awt.GraphicsEnvironment;
 import java.util.Scanner;
 import Modelo.ConsultaRuta;
@@ -22,7 +23,8 @@ import Servicio.SimuladorTurno;
  * Menú de consola. Cada opción muestra un caso real y un caso borde.
  * Solo habla con {@link MetroService}; no contiene lógica de negocio.
  *
- * <p>Las opciones 4 (tabla hash) y 5 (árbol de líneas) son de la parte P3 y
+ * <p>
+ * Las opciones 4 (tabla hash) y 5 (árbol de líneas) son de la parte P3 y
  * quedan como punto de integración: {@link #opcionTablaHash()} y
  * {@link #opcionArbolLineas()}.
  */
@@ -44,7 +46,10 @@ public class MenuConsola {
         this.algoritmos = algoritmos;
     }
 
-    /** Ciclo principal: muestra el menú hasta que se elija salir o se acabe la entrada. */
+    /**
+     * Ciclo principal: muestra el menú hasta que se elija salir o se acabe la
+     * entrada.
+     */
     public void iniciar() {
         boolean salir = false;
         while (!salir && !entradaCerrada) {
@@ -191,7 +196,7 @@ public class MenuConsola {
         pila.apilar(new ConsultaRuta(b, c, 7));
         System.out.println("Caso real: se apilan 2 consultas.");
         System.out.println("Pila: " + pila);
-        System.out.println("Última consulta: " + pila.verTope());
+        System.out.println("Última consulta: " + pila.verCima());
         System.out.println("Se deshace: " + pila.desapilar());
         System.out.println("Pila: " + pila);
 
@@ -199,20 +204,26 @@ public class MenuConsola {
         System.out.println("Caso borde: pila vacía y se intenta deshacer.");
         try {
             pila.desapilar();
-        } catch (ColaVaciaException e) {
-            System.out.println("ColaVaciaException -> " + e.getMessage());
+        } catch (PilaVaciaException e) {
+            System.out.println("PilaVaciaException -> " + e.getMessage());
         }
     }
 
     // ------------------------------------------------- opciones 4 y 5 (P3)
 
-    /** Punto de integración de P3: aquí se demuestra la tabla hash (altas, búsqueda, colisión). */
+    /**
+     * Punto de integración de P3: aquí se demuestra la tabla hash (altas, búsqueda,
+     * colisión).
+     */
     private void opcionTablaHash() {
         System.out.println("La tabla hash es la parte P3 y todavía no está integrada.");
         System.out.println("Cuando exista, esta opción debe mostrar altas, búsqueda y colisión de claves.");
     }
 
-    /** Punto de integración de P3: aquí se demuestra el árbol (insertar, buscar, listar en orden). */
+    /**
+     * Punto de integración de P3: aquí se demuestra el árbol (insertar, buscar,
+     * listar en orden).
+     */
     private void opcionArbolLineas() {
         System.out.println("El árbol de líneas es la parte P3 y todavía no está integrado.");
         System.out.println("Cuando exista, esta opción debe mostrar insertar, buscar y listar en orden.");
@@ -340,7 +351,10 @@ public class MenuConsola {
         }
     }
 
-    /** Lee una línea; devuelve null (y marca la entrada como cerrada) si no hay más datos. */
+    /**
+     * Lee una línea; devuelve null (y marca la entrada como cerrada) si no hay más
+     * datos.
+     */
     private String leer(String mensaje) {
         System.out.print(mensaje);
         if (!entrada.hasNextLine()) {

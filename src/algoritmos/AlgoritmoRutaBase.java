@@ -1,7 +1,7 @@
 package algoritmos;
 
 import estructuras.grafo.Grafo;
-import estructuras.lineales.ListaEnlazada;
+import EstructurasLineales.ListaEnlazada;
 import Excepciones.RutaNoExisteException;
 import Modelo.Estacion;
 import Modelo.ResultadoRuta;
@@ -53,11 +53,13 @@ public abstract class AlgoritmoRutaBase implements AlgoritmoRuta {
      * se llegó a cada uno). Puede detenerse al alcanzar el destino.
      */
     protected abstract void explorar(Grafo grafo, int origen, int destino,
-                                     int[] distancia, int[] predecesor);
+            int[] distancia, int[] predecesor);
 
-    /** Reconstruye el camino de forma recursiva: primero el resto, luego el vértice. */
+    /**
+     * Reconstruye el camino de forma recursiva: primero el resto, luego el vértice.
+     */
     private void reconstruirCamino(Grafo grafo, int[] predecesor, int vertice,
-                                   ListaEnlazada<Estacion> camino) {
+            ListaEnlazada<Estacion> camino) {
         if (vertice == SIN_PREDECESOR) {
             return;
         }

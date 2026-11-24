@@ -2,7 +2,7 @@ package Servicio;
 
 import estructuras.grafo.Arista;
 import estructuras.grafo.Grafo;
-import estructuras.lineales.ListaEnlazada;
+import EstructurasLineales.ListaEnlazada;
 import Excepciones.ExcepcionMetro;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -18,12 +18,15 @@ import Modelo.LineaMetro;
 /**
  * Guarda y carga la red del metro en un archivo de texto (.txt, UTF-8).
  *
- * <p>Formato, un registro por línea y campos separados por {@code ;}:
+ * <p>
+ * Formato, un registro por línea y campos separados por {@code ;}:
+ * 
  * <pre>
  * ESTACION;id;nombre;codigoLinea;lineaConexion   (lineaConexion vacía = estación normal)
  * CONEXION;idA;idB;minutos
  * LINEA;codigo;nombre;id1,id2,id3                 (ids de las estaciones, en orden)
  * </pre>
+ * 
  * Las líneas que empiezan por {@code #} y las vacías se ignoran. Las
  * estaciones deben aparecer antes de las conexiones y de las líneas.
  */
@@ -145,7 +148,10 @@ public final class PersistenciaGrafo {
         escritor.newLine();
     }
 
-    /** El texto no puede contener el separador ni saltos de línea: rompería el formato. */
+    /**
+     * El texto no puede contener el separador ni saltos de línea: rompería el
+     * formato.
+     */
     private static String textoSeguro(String texto) {
         if (texto == null) {
             return "";
@@ -160,7 +166,7 @@ public final class PersistenciaGrafo {
     // -------------------------------------------------------------- lectura
 
     private static void procesarLinea(String linea, int numero, Grafo grafo,
-                                      ListaEnlazada<LineaMetro> lineas) {
+            ListaEnlazada<LineaMetro> lineas) {
         if (linea.isEmpty() || linea.startsWith("#")) {
             return;
         }

@@ -20,12 +20,14 @@ import Modelo.ResultadoRuta;
  * Fachada de la lógica del metro. La interfaz (consola o Swing) habla solo con
  * esta clase.
  *
- * <p>Depende de la interfaz {@link AlgoritmoRuta} (inyección de dependencias):
+ * <p>
+ * Depende de la interfaz {@link AlgoritmoRuta} (inyección de dependencias):
  * se puede cambiar de BFS a Dijkstra con {@link #setAlgoritmo} sin tocar nada
  * más. Une las estructuras del proyecto: grafo (red), lista enlazada
  * (líneas y pasajeros registrados), cola (andén) y pila (historial).
  *
- * <p>Integración con P3: los pasajeros y las líneas se guardan hoy en
+ * <p>
+ * Integración con P3: los pasajeros y las líneas se guardan hoy en
  * {@link ListaEnlazada} (búsqueda O(n)). Cuando estén listas la tabla hash
  * (id de pasajero) y el árbol binario (código de línea), solo hay que cambiar
  * los campos {@code pasajeros} y {@code lineas} y los métodos de búsqueda.
@@ -154,8 +156,9 @@ public class MetroService {
      * Calcula la ruta con el algoritmo actual. Solo las consultas exitosas
      * quedan en el historial.
      *
-     * @throws EstacionNoExisteException            si alguna estación no está en la red
-     * @throws excepciones.RutaNoExisteException    si no hay camino entre ellas
+     * @throws EstacionNoExisteException         si alguna estación no está en la
+     *                                           red
+     * @throws excepciones.RutaNoExisteException si no hay camino entre ellas
      */
     public ResultadoRuta calcularRuta(Estacion origen, Estacion destino) {
         ResultadoRuta resultado = algoritmo.calcular(grafo, origen, destino);
@@ -165,15 +168,15 @@ public class MetroService {
 
     // --------------------------------------------------------- historial
 
-    /** @throws excepciones.ColaVaciaException si no hay consultas */
+    /** @throws excepciones.PilaVaciaException si no hay consultas */
     public ConsultaRuta ultimaConsulta() {
-        return historial.verTope();
+        return historial.verCima();
     }
 
     /**
      * Quita la última consulta del historial y la devuelve.
      *
-     * @throws excepciones.ColaVaciaException si no hay consultas
+     * @throws excepciones.PilaVaciaException si no hay consultas
      */
     public ConsultaRuta deshacerUltimaConsulta() {
         return historial.desapilar();

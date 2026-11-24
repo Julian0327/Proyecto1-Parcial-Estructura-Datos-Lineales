@@ -1,9 +1,12 @@
 package Modelo;
 
-/** Pasajero del metro: sabe dónde está y cuántos viajes ha hecho. */
+/**
+ * Pasajero del metro: sabe dónde está, a dónde va y cuántos viajes ha hecho.
+ */
 public class Pasajero extends Persona {
 
     private Estacion estacionActual;
+    private Estacion destino;
     private int viajes;
 
     public Pasajero(String id, String nombre, Estacion estacionActual) {
@@ -14,6 +17,18 @@ public class Pasajero extends Persona {
 
     public Estacion getEstacionActual() {
         return estacionActual;
+    }
+
+    public Estacion getDestino() {
+        return destino;
+    }
+
+    public void setDestino(Estacion destino) {
+        this.destino = destino;
+    }
+
+    public boolean tieneDestino() {
+        return destino != null;
     }
 
     public int getViajes() {

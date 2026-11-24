@@ -1,8 +1,8 @@
 import algoritmos.AlgoritmoRuta;
 import algoritmos.BfsRuta;
 import algoritmos.DijkstraRuta;
-import servicio.DatosDemo;
-import servicio.MetroService;
+import Servicio.DatosDemo;
+import Servicio.MetroService;
 import ui.MenuConsola;
 import ui.VentanaMetro;
 
@@ -10,13 +10,14 @@ import ui.VentanaMetro;
  * Punto de entrada. Solo arma las piezas (servicio, algoritmos, interfaz) y
  * arranca; no contiene lógica del metro.
  *
- * <p>Sin argumentos abre el menú de consola; con {@code --gui} abre la
+ * <p>
+ * Sin argumentos abre el menú de consola; con {@code --gui} abre la
  * ventana Swing.
  */
 public class Main {
 
     public static void main(String[] args) {
-        AlgoritmoRuta[] algoritmos = {new DijkstraRuta(), new BfsRuta()};
+        AlgoritmoRuta[] algoritmos = { new DijkstraRuta(), new BfsRuta() };
         MetroService servicio = new MetroService(algoritmos[0]);
         DatosDemo.cargar(servicio);
 

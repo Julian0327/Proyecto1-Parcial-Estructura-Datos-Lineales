@@ -1,6 +1,6 @@
 package estructuras.grafo;
 
-import estructuras.lineales.ListaEnlazada;
+import EstructurasLineales.ListaEnlazada;
 import Excepciones.EstacionNoExisteException;
 import Modelo.Estacion;
 
@@ -9,7 +9,8 @@ import Modelo.Estacion;
  * Cada estación recibe un índice interno (0, 1, 2...) según el orden de
  * registro. Se implementa desde cero: solo arreglos y {@link ListaEnlazada}.
  *
- * <p>Complejidad: agregar estación O(V) para detectar duplicados; conectar
+ * <p>
+ * Complejidad: agregar estación O(V) para detectar duplicados; conectar
  * O(V + grado); recorrer los vecinos de un vértice O(grado).
  */
 public class Grafo {
@@ -173,7 +174,7 @@ public class Grafo {
                     texto.append(", ");
                 }
                 texto.append(vertices[arista.getDestino()].estacion.getNombre())
-                     .append(" (").append(arista.getMinutos()).append(" min)");
+                        .append(" (").append(arista.getMinutos()).append(" min)");
                 primera = false;
             }
             texto.append(System.lineSeparator());

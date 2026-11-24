@@ -1,8 +1,8 @@
 package EstructurasLineales;
 
-public interface IPila<T> {
+public interface IPila<T> extends Iterable<T> {
 
-    // Pone un elemento en la cima. 
+    // Pone un elemento en la cima.
     void apilar(T elemento);
 
     // Saca y devuelve la cima. Lanza PilaVaciaException si está vacía.
