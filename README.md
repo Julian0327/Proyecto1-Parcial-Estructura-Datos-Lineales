@@ -10,13 +10,13 @@ Sistema de metro desarrollado en **Java** que modela estaciones, conexiones entr
 |---|---|
 | Julian Aldemar Perez | modelo, excepciones, datos demo, persistencia, README |
 | Maria de los Angeles Gomez | estructuras lineales (lista enlazada, cola, pila) |
-| Nelson Escobar | grafo, cola de prioridad y algoritmos de ruta |
-| Ximena Talaga | tabla hash y árbol binario de búsqueda |
-| David Santiago Pachecho | servicio, interfaz (consola y Swing) y Main |
+| Ximena Talaga | grafo, cola de prioridad y algoritmos de ruta |
+| David Santiago Pacheco | tabla hash y árbol binario de búsqueda |
+| Nelson Escobar | servicio, interfaz (consola y Swing) y Main |
 
 ## Video de demostración
 
-_Pegar aquí el enlace de YouTube (mínimo 7 minutos)_
+https://www.youtube.com/watch?v=FUruRLuDd_g
 
 ## Estructuras de datos y problema que resuelven
 
